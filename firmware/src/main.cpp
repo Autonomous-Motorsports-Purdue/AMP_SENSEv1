@@ -1,33 +1,131 @@
-#include <Arduino.h>
-#define BUTTON_PIN PA0
-#define LED_PIN PA1
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 
-void update_tick();
-bool can_update = false;
-void setup() {
-   // put your setup code here, to run once:
-    Serial.begin(115200);
-  /*
-  HardwareTimer *tim = new HardwareTimer(TIM2);
-  tim -> setOverflow(5,HERTZ_FORMAT);
-  tim -> attachInterrupt(update_tick);
-  tim-> resume();
-  */
-  pinMode(LED_PIN,OUTPUT);
-  pinMode(BUTTON_PIN,INPUT_PULLUP);
-  attachInterrupt(BUTTON_PIN,update_tick,FALLING);
+/* This driver uses the Adafruit unified sensor library (Adafruit_Sensor),
+   which provides a common 'type' for sensor data and some helper functions.
+
+   To use this driver you will also need to download the Adafruit_Sensor
+   library and include it in your libraries folder.
+
+   You should also assign a unique ID to this sensor for use with
+   the Adafruit Sensor API so that you can identify this particular
+   sensor in any data logs, etc.  To assign a unique ID, simply
+   provide an appropriate value in the constructor below (12345
+   is used by default in this example).
+
+   Connections
+   ===========
+   Connect SCL to analog 5
+   Connect SDA to analog 4
+   Connect VDD to 3.3-5V DC
+   Connect GROUND to common ground
+
+   History
+   =======
+   2015/MAR/03  - First release (KTOWN)
+*/
+
+/* Set the delay between fresh samples */
+#define BNO055_SAMPLERATE_DELAY_MS (100)
+
+// Check I2C device address and correct line below (by default address is 0x29 or 0x28)
+//                                   id, address
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+
+/**************************************************************************/
+/*
+    Displays some basic information on this sensor from the unified
+    sensor API sensor_t type (see Adafruit_Sensor for more information)
+*/
+/**************************************************************************/
+void displaySensorDetails(void)
+{
+  sensor_t sensor;
+  bno.getSensor(&sensor);
+  Serial.println("------------------------------------");
+  Serial.print  ("Sensor:       "); Serial.println(sensor.name);
+  Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
+  Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
+  Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" xxx");
+  Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" xxx");
+  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" xxx");
+  Serial.println("------------------------------------");
+  Serial.println("");
+  delay(500);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  if (can_update){
-    Serial.print("ticked");
-    can_update = false;
-    digitalToggle(LED_PIN);
+/**************************************************************************/
+/*
+    Arduino setup function (automatically called at startup)
+*/
+/**************************************************************************/
+void setup(void)
+{
+  Serial.begin(115200);
+  Serial.println("Orientation Sensor Test"); Serial.println("");
+
+  /* Initialise the sensor */
+  if(!bno.begin())
+  {
+    /* There was a problem detecting the BNO055 ... check your connections */
+    Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+    while(1);
   }
-  
-}
-void update_tick(){
-  can_update = true;
+   
+  delay(1000);
+
+  /* Use external crystal for better accuracy */
+  bno.setExtCrystalUse(true);
+   
+  /* Display some basic information on this sensor */
+  displaySensorDetails();
 }
 
+/**************************************************************************/
+/*
+    Arduino loop function, called once 'setup' is complete (your own code
+    should go here)
+*/
+/**************************************************************************/
+void loop(void)
+{
+  /* Get a new sensor event */
+  sensors_event_t orientationData, magnetometerData, accelerometerData;
+  bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+  bno.getEvent(&magnetometerData, Adafruit_BNO055::VECTOR_MAGNETOMETER);
+  bno.getEvent(&accelerometerData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+
+  /* Board layout:
+         +----------+
+         |         *| RST   PITCH  ROLL  HEADING
+     ADR |*        *| SCL
+     INT |*        *| SDA     ^            /->
+     PS1 |*        *| GND     |            |
+     PS0 |*        *| 3VO     Y    Z-->    \-X
+         |         *| VIN
+         +----------+
+  */
+  /* The processing sketch expects data as roll, pitch, heading */
+  Serial.print(("Orientation: "));
+  Serial.print((float)orientationData.orientation.x);
+  Serial.print(F(" "));
+  Serial.print((float)orientationData.orientation.y);
+  Serial.print(F(" "));
+  Serial.print((float)orientationData.orientation.z);
+  Serial.println(F(""));
+
+  bno.getEvent(&accelerometerData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+  Serial.print(("Acceleration"));
+  Serial.print((float)accelerometerData.acceleration.x);
+  Serial.print(F(" "));
+  Serial.print((float)accelerometerData.acceleration.y);
+  Serial.print(F(""));
+  Serial.print((float)accelerometerData.acceleration.z);
+  Serial.println(F(""));
+  Serial.print((float)magnetometerData.magnetic.x);
+  Serial.print((float)magnetometerData.magnetic.y);
+  Serial.print((float)magnetometerData.magnetic.z);
+ delay(200);
+}
