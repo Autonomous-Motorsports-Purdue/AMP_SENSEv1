@@ -30,7 +30,7 @@ void setup(void) {
 }
 
 void loop(void) {
-  sensors_event_t orientationData, velocityData;
+  sensors_event_t orientationData, velocityData, linearData;
 
   // Absolute Position
   bno.getEvent(&orientationData);
@@ -43,12 +43,23 @@ void loop(void) {
 
   // Angular Rate
   bno.getEvent(&velocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);
-  Serial.print(",ax:");
+  Serial.print(",rx:");
   Serial.print(velocityData.gyro.x, DECIMALS);
-  Serial.print(",ay:");
+  Serial.print(",ry:");
   Serial.print(velocityData.gyro.y, DECIMALS);
-  Serial.print(",az:");
+  Serial.print(",rz:");
   Serial.print(velocityData.gyro.z, DECIMALS);
   Serial.println();
+
+  // Linear Acceleration
+  bno.getEvent(&linearData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+  Serial.print(",ax:");
+  Serial.print(linearData.acceleration.x, DECIMALS);
+  Serial.print(",ay:");
+  Serial.print(linearData.acceleration.y, DECIMALS);
+  Serial.print(",az:");
+  Serial.print(linearData.acceleration.z, DECIMALS);
+  Serial.println();
+
   // delay(3);
 }
