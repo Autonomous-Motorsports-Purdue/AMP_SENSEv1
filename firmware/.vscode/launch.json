@@ -12,11 +12,11 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "C:/Users/aidan/AMP/AMP_SENSEv1/firmware/.pio/build/nucleo_f303k8/firmware.elf",
+            "executable": "C:/Users/mgagv/Documents/Code/amp/AMP_SENSEv1/firmware/.pio/build/nucleo_f303k8/firmware.elf",
             "projectEnvName": "nucleo_f303k8",
-            "toolchainBinDir": "C:/Users/aidan/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/mgagv/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
-            "svdPath": "C:/Users/aidan/.platformio/platforms/ststm32/misc/svd/STM32F30x.svd",
+            "svdPath": "C:/Users/mgagv/.platformio/platforms/ststm32/misc/svd/STM32F30x.svd",
             "preLaunchTask": {
                 "type": "PlatformIO",
                 "task": "Pre-Debug"
@@ -26,21 +26,21 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "C:/Users/aidan/AMP/AMP_SENSEv1/firmware/.pio/build/nucleo_f303k8/firmware.elf",
+            "executable": "C:/Users/mgagv/Documents/Code/amp/AMP_SENSEv1/firmware/.pio/build/nucleo_f303k8/firmware.elf",
             "projectEnvName": "nucleo_f303k8",
-            "toolchainBinDir": "C:/Users/aidan/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/mgagv/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
-            "svdPath": "C:/Users/aidan/.platformio/platforms/ststm32/misc/svd/STM32F30x.svd"
+            "svdPath": "C:/Users/mgagv/.platformio/platforms/ststm32/misc/svd/STM32F30x.svd"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "C:/Users/aidan/AMP/AMP_SENSEv1/firmware/.pio/build/nucleo_f303k8/firmware.elf",
+            "executable": "C:/Users/mgagv/Documents/Code/amp/AMP_SENSEv1/firmware/.pio/build/nucleo_f303k8/firmware.elf",
             "projectEnvName": "nucleo_f303k8",
-            "toolchainBinDir": "C:/Users/aidan/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/mgagv/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
-            "svdPath": "C:/Users/aidan/.platformio/platforms/ststm32/misc/svd/STM32F30x.svd",
+            "svdPath": "C:/Users/mgagv/.platformio/platforms/ststm32/misc/svd/STM32F30x.svd",
             "loadMode": "manual"
         }
     ]
